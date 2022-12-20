@@ -234,6 +234,7 @@ class Ufo(Ship):
             window.blit(self.explode_image[self.index], (self.rect.x - 10, self.rect.y - 20))
 
     def update(self):
+        # Moving
         self.rect.y += self.speed
 
         # Shooting
@@ -406,6 +407,10 @@ class Game:
                     if event.key == pygame.K_q or pygame.K_ESCAPE:
                         sys.exit()
 
+            # Mouse events
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_press = pygame.mouse.get_pressed(3)
+
             # The background
             window.fill('olive drab')
             window.blit(pygame.image.load('images/background.png'), (0, 0))
@@ -414,6 +419,15 @@ class Game:
             window.blit(pygame.image.load('images/buttons/start_button.png'), (184, 120))
             window.blit(pygame.image.load('images/buttons/controls_button.png'), (184, 240))
             window.blit(pygame.image.load('images/buttons/quit_button.png'), (184, 360))
+
+            if mouse_press[0] and 184 < mouse_pos[0] < 180 + 232 and 120 < mouse_pos[1] < 120 + 80:
+                self.running = True
+                self.playing()
+            elif mouse_press[0] and 184 < mouse_pos[0] < 180 + 232 and 240 < mouse_pos[1] < 240 + 80:
+                self.in_controls_menu = True
+                self.controls_menu()
+            elif mouse_press[0] and 184 < mouse_pos[0] < 180 + 232 and 360 < mouse_pos[1] < 360 + 80:
+                sys.exit()
 
             pygame.display.update()
 
@@ -428,6 +442,10 @@ class Game:
                     if event.key == pygame.K_b:
                         self.in_controls_menu = False
 
+            # Mouse events
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_press = pygame.mouse.get_pressed(3)
+
             window.fill('olive drab')
             font = pygame.font.Font('freesansbold.ttf', 30)
             window.blit(font.render('move left - A', True, 'white'), (170, 150))
@@ -437,6 +455,9 @@ class Game:
 
             # Back button
             window.blit(pygame.image.load('images/buttons/back_button.png'), (170, 360))
+
+            if mouse_press[0] and 170 < mouse_pos[0] < 170 + 232 and 360 < mouse_pos[1] < 360 + 80:
+                self.in_controls_menu = False
 
             pygame.display.update()
 
@@ -454,10 +475,16 @@ class Game:
                     if event.key == pygame.K_p:
                         self.paused = False
 
-            pygame.mouse.set_visible(False)
+            # Mouse events
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_press = pygame.mouse.get_pressed(3)
 
             pause_text = pygame.image.load('images/buttons/paused_button.png')
             window.blit(pause_text, (184, 220))
+
+            if mouse_press[0] and 184 < mouse_pos[0] < 184 + 232 and 220 < mouse_pos[1] < 220 + 80:
+                self.paused = False
+
             pygame.display.update()
 
     def lost_screen(self):
@@ -477,11 +504,21 @@ class Game:
                         space.level = 1
                         space.spawn_ufo()
 
-            pygame.mouse.set_visible(False)
+            # Mouse events
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_press = pygame.mouse.get_pressed(3)
 
             # Buttons
             window.blit(pygame.image.load('images/buttons/restart_button.png'), (184, 170))
             window.blit(pygame.image.load('images/buttons/quit_button.png'), (184, 320))
+
+            if mouse_press[0] and 184 < mouse_pos[0] < 184 + 232 and 170 < mouse_pos[1] < 170 + 80:
+                player.reset()
+                player.rect.center = (320, 500)
+                space.level = 1
+                space.spawn_ufo()
+            elif mouse_press[0] and 184 < mouse_pos[0] < 184 + 232 and 320 < mouse_pos[1] < 320 + 80:
+                self.running = False
 
             pygame.display.update()
 
@@ -495,13 +532,15 @@ class Game:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        player.reset()
                         self.running = False
+                        player.reset()
                     if event.key == pygame.K_p:
                         self.paused = True
                         self.pause()
 
-            pygame.mouse.set_visible(False)
+            # Mouse events
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_press = pygame.mouse.get_pressed(3)
 
             # The background
             window.fill('alice blue')
@@ -536,6 +575,13 @@ class Game:
             # Stats
             player.draw_stats()
 
+            # Pause button
+            window.blit(pygame.image.load('images/buttons/pause_button.png'), (287, 20))
+
+            if mouse_press[0] and 287 < mouse_pos[0] < 287 + 26 and 20 < mouse_pos[1] < 20 + 26:
+                self.paused = True
+                self.pause()
+
             # Update the screen
             pygame.display.update()
 
@@ -543,3 +589,4 @@ class Game:
 if __name__ == '__main__':
     game = Game()
     game.main_menu()
+
